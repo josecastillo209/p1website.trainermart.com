@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "name": "Route Walker X",
+  "brand": "TrainerMart",
+  "price": 159.99,
+  "category": "Trail",
+  "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
+  "description": "A street-tech hiking trainer built for long routes. Waterproof ripstop upper, padded collar, and a deep lugged outsole that grips mud, rock, and wet city sidewalks.",
+  "sizes": [7, 8, 9, 10, 11, 12],
+  "colors": ["Black Tech", "Forest", " Ember Red"],
+  "inStock": true
+}
