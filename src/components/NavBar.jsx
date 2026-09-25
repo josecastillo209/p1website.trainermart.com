@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 
-function Navbar() {
+function Navbar({ cartCount }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -26,7 +26,9 @@ function Navbar() {
               <NavLink className="nav-link" to="/shop">Shop</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/cart">Cart</NavLink>
+              <NavLink className="nav-link" to="/cart">
+                Cart ({cartCount || 0})
+              </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/account">Account</NavLink>
