@@ -37,12 +37,12 @@
   },
   {
     "id": 4,
-    "name": "Meadow Court 90",
+    "name": "Meadow Runner Lite",
     "brand": "TrainerMart",
     "price": 120,
     "category": "Lifestyle",
-    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
-    "description": "The same court-to-street Classic 90 shape, tuned for a women's fit. Light colorways made for spring routes, park paths, and weekend travel.",
+    "image": "/image/meadow-runner-lite.jpg",
+    "description": "Tuned for a women's fit. Street-tech hiking trainer built for long routes. Waterproof ripstop upper, padded collar, and a deep lugged outsole that grips mud, rock, and wet city sidewalks. Light colorways made for spring routes, park paths, and weekend travel.",
     "sizes": [5, 6, 7, 8, 9, 10],
     "colors": ["Light Blue", "Light Grass", "Cream White"],
     "inStock": true
