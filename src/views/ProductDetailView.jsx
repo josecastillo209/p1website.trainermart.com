@@ -20,6 +20,11 @@ function ProductDetailView({ addToCart }) {
     )
   }
 
+  const displayImage =
+  product.colorImages && color && product.colorImages[color]
+    ? product.colorImages[color]
+    : product.image
+
   function handleQuantityChange(event) {
     const value = Number(event.target.value)
     if (!Number.isInteger(value) || value < 1) {
@@ -62,7 +67,7 @@ function ProductDetailView({ addToCart }) {
       <div className="row g-4">
         <div className="col-md-6">
           <img
-            src={product.image}
+            src={displayImage}
             alt={product.name}
             className="img-fluid rounded shadow-sm"
           />
