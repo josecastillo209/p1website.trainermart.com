@@ -22,7 +22,12 @@
     "brand": "TrainerMart",
     "price": 120,
     "category": "Lifestyle",
-    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
+    "image": "/images/CreamWhiteLC90.jpg",
+    "colorImages": {
+      "Cream White": "/images/CreamWhiteLC90.jpg",
+      "Ember Red": "/images/EmberRedLC90.jpg",
+      "Route Blue": "/images/RouteBlueLC90.jpg"
+    },
     "description": "A court-to-street trainer with overlay panels, a chunky midsole, and everyday cushioning. Built for gym battles, long walks between towns, and looking sharp on the route.",
     "sizes": [7, 8, 9, 10, 11, 12],
     "colors": ["Ember Red", "Route Blue", "Cream White"],
@@ -34,7 +39,7 @@
     "brand": "TrainerMart",
     "price": 120,
     "category": "Lifestyle",
-    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
+    "image": "/images/Petal Classic 90 all colors.jpg",
     "description": "A women's cut of the League Classic 90 with a slimmer collar and softer overlays. Everyday cushioning for gym days, town errands, and long walks between routes.",
     "sizes": [5, 6, 7, 8, 9, 10],
     "colors": ["Petal Pink", "Blush", "Cream White"],
