@@ -7,9 +7,15 @@ import ProductDetailView from './views/ProductDetailView'
 import CartView from './views/CartView'
 import AccountView from './views/AccountView'
 import CreateAccountView from './views/CreateAccountView'
+import Footer from './components/Footer'
 
 function App() {
   const [cartItems, setCartItems] = useState([])
+  const [account, setAccount] = useState(null)
+
+  function createAccount(newAccount) {
+    setAccount(newAccount)
+  }
 
   function addToCart(newItem) {
     setCartItems((current) => {
@@ -78,9 +84,16 @@ function App() {
             />
           }
         />
-        <Route path="/account" element={<AccountView />} />
-        <Route path="/create-account" element={<CreateAccountView />} />
+        <Route
+          path="/account"
+          element={<AccountView account={account} />}
+        />
+        <Route
+          path="/create-account"
+          element={<CreateAccountView createAccount={createAccount} />}
+        />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
