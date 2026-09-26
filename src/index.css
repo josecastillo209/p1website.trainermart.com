@@ -1,111 +1,100 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --ink: #14201c;
+  --forest: #1f3d32;
+  --moss: #3f6b52;
+  --cream: #f4efe4;
+  --sand: #e7dcc8;
+  --ember: #c4452f;
+  --gold: #e2b441;
+  --card: #fffdf8;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html, body, #root {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(226, 180, 65, 0.12), transparent 28%),
+    linear-gradient(180deg, #f7f3ea 0%, #ece7db 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+.navbar.store-nav {
+  background: var(--forest) !important;
+  border-bottom: 3px solid var(--gold);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+.navbar.store-nav .navbar-brand {
+  letter-spacing: 0.04em;
+  color: #fff !important;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+.navbar.store-nav .nav-link {
+  color: #e8f0ea !important;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.navbar.store-nav .nav-link.active {
+  color: var(--gold) !important;
+}
+
+.hero-panel {
+  background:
+    linear-gradient(120deg, rgba(20, 32, 28, 0.92), rgba(31, 61, 50, 0.78)),
+    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600") center/cover;
+  border-bottom: 3px solid var(--gold);
+}
+
+.hero-kicker {
+  color: var(--gold);
+  letter-spacing: 0.16em;
+}
+
+.btn-warning {
+  background-color: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.btn-dark {
+  background-color: var(--ember);
+  border-color: var(--ember);
+}
+
+.btn-dark:hover {
+  background-color: #a33624;
+  border-color: #a33624;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(31, 61, 50, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(20, 32, 28, 0.12);
+}
+
+.store-footer {
+  background: var(--ink) !important;
+  border-top: 3px solid var(--gold);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--moss);
+  box-shadow: 0 0 0 0.2rem rgba(63, 107, 82, 0.2);
 }

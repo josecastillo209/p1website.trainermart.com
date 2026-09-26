@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 function Navbar({ cartCount }) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark store-nav">
       <div className="container">
         <NavLink className="navbar-brand fw-bold" to="/">
           TrainerMart

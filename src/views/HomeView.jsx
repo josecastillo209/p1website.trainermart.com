@@ -7,9 +7,9 @@ function HomeView() {
 
   return (
     <div>
-      <section className="bg-dark text-white py-5">
+      <section className="hero-panel text-white py-5">
         <div className="container py-5">
-          <p className="text-uppercase small mb-2">TrainerMart</p>
+          <p className="hero-kicker text-uppercase small mb-2">TrainerMart</p>
           <h1 className="display-4 fw-bold">Gear for the next route.</h1>
           <p className="lead col-lg-7">
             Adventure sneakers, trail kits, and camp essentials for trainers
