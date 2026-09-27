@@ -20,6 +20,11 @@ function ProductDetailView({ addToCart }) {
     )
   }
 
+  const displayPrice =
+  product.sizePrices && size && product.sizePrices[size]
+    ? product.sizePrices[size]
+    : product.price
+  
   const displayImage =
   product.colorImages && color && product.colorImages[color]
     ? product.colorImages[color]
@@ -54,7 +59,7 @@ function ProductDetailView({ addToCart }) {
       size,
       color,
       quantity,
-      price: product.price,
+      price: displayPrice,
     })
 
     setMessage(`Added ${quantity} ${product.name} to cart.`)
@@ -75,7 +80,7 @@ function ProductDetailView({ addToCart }) {
         <div className="col-md-6">
           <p className="text-muted mb-1">{product.category}</p>
           <h1>{product.name}</h1>
-          <p className="fs-3">${product.price.toFixed(2)}</p>
+          <p className="fs-3">${displayPrice.toFixed(2)}</p>
           <p>{product.description}</p>
 
           {message && <div className="alert alert-info">{message}</div>}
