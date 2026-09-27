@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import HomeView from './views/HomeView'
 import ShopView from './views/ShopView'
@@ -65,7 +65,7 @@ function App() {
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Navbar cartCount={cartCount} />
       <Routes>
         <Route path="/" element={<HomeView />} />
@@ -94,7 +94,7 @@ function App() {
         />
       </Routes>
       <Footer />
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
