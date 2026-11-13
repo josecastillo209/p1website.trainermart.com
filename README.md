@@ -17,33 +17,26 @@ The account system supports:
 
 ### Local Setup
 
-These instructions apply to the current structure, where the React app
-is in the repository root and the Express backend is in `server/`.
+The React app is in `client/` and the Express backend is in `server/`.
 
-Use a Node.js version supported by the installed Vite dependencies:
-Node 20.19+ within version 20, or Node 22.12+.
+Use Node 20.19+ or Node 22.12+.
 
-Install frontend dependencies from the repository root:
+Install frontend dependencies:
 
-```bash
+cd server
 npm ci
-```
 
 Install backend dependencies:
 
-```bash
 cd server
 npm ci
-```
 
-Create a `.env` file inside `server/`:
+Create server/.env (never commit it):
 
-```dotenv
 PORT=3000
 MONGODB_URI=your_mongodb_atlas_connection_string
 MONGODB_DB=trainermart
 SESSION_SECRET=your_random_session_secret
-```
 
 Replace the placeholders with your own values. The Atlas connection
 string must contain a valid database username and password. URL-encode
@@ -64,120 +57,107 @@ The `.env` file is excluded through `.gitignore`.
 
 ### Running Locally
 
-Start the backend from `server/`:
-
-```bash
+Terminal 1, backend:
+cd server
 npm run dev
-```
 
-In a second terminal, start the frontend from the repository root:
-
-```bash
+Terminal 2, frontend:
+cd client
 npm run dev
-```
 
 Open the local URL printed by Vite. The Vite development proxy forwards
-requests beginning with `/api` to `http://localhost:3000`.
-
-To check the backend connection, open `/api/health` using the Vite URL.
-
+requests beginning with /api to http://localhost:3000.
+To check the backend connection, open /api/health using the Vite URL.
 ### Account API
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| POST | `/api/accounts` | Create an account |
-| POST | `/api/login` | Authenticate and create a login session |
-| GET | `/api/account` | Retrieve the logged-in user's account |
-| PUT | `/api/account` | Update the logged-in user's account |
-| POST | `/api/logout` | Destroy the session and log out |
+| Method | Endpoint        | Purpose                                 |
+| ------ | --------------- | --------------------------------------- |
+| POST   | `/api/accounts` | Create an account                       |
+| POST   | `/api/login`    | Authenticate and create a login session |
+| GET    | `/api/account`  | Retrieve the logged-in user's account   |
+| PUT    | `/api/account`  | Update the logged-in user's account     |
+| POST   | `/api/logout`   | Destroy the session and log out         |
 
 Account retrieval and editing require a valid login session.
 Password hashes are excluded from account responses.
-
 ### Main Account Files
 
-- `server/app.js`: Express setup, database connection, and session storage.
-- `server/controllers/accountController.js`: Account validation and operations.
-- `server/routes/accountRoutes.js`: Account API routes.
-- `src/views/CreateAccountView.jsx`: Registration form.
-- `src/views/AccountView.jsx`: Login, account dashboard, and logout.
-- `src/components/EditAccountForm.jsx`: Profile and password editing.
-- `vite.config.js`: Frontend development proxy.
+server/app.js: Express setup, database connection, and session storage.
+server/controllers/accountController.js: Account validation and operations.
+server/routes/accountRoutes.js: Account API routes.
+src/views/CreateAccountView.jsx: Registration form.
+src/views/AccountView.jsx: Login, account dashboard, and logout.
+src/components/EditAccountForm.jsx: Profile and password editing.
+vite.config.js: Frontend development proxy.
 
 ### Verification
-
 The following were verified locally:
 
-- Account creation through the API and website.
-- Rejection of duplicate usernames or email addresses.
-- Successful login.
-- Login persistence after refreshing the page.
-- Profile updates remaining after refresh.
-- Logout and rejection of account access afterward.
-- Successful production frontend build using `npm run build`.
+Account creation through the API and website.
+Rejection of duplicate usernames or email addresses.
+Successful login.
+Login persistence after refreshing the page.
+Profile updates remaining after refresh.
+Logout and rejection of account access afterward.
+Successful production frontend build using npm run build.
 
 ## Shopping Cart
-
 The cart is stored in the Express session and synced with React.
 
-- Add, update, and remove items.
-- Cart survives a page refresh.
-- Navbar count comes from the session cart.
-- Cart is cleared after a successful order.
+Add, update, and remove items.
+Cart survives a page refresh.
+Navbar count comes from the session cart.
+Cart is cleared after a successful order.
 
 ### Cart API
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/api/cart` | Return the session cart |
-| POST | `/api/cart` | Add an item |
-| PUT | `/api/cart/:itemId` | Update quantity |
-| DELETE | `/api/cart/:itemId` | Remove an item |
+| Method | Endpoint            | Purpose                 |
+| ------ | ------------------- | ----------------------- |
+| GET    | `/api/cart`         | Return the session cart |
+| POST   | `/api/cart`         | Add an item             |
+| PUT    | `/api/cart/:itemId` | Update quantity         |
+| DELETE | `/api/cart/:itemId` | Remove an item          |
 
 ### Main Cart Files
 
-- `server/controllers/cartController.js`
-- `server/routes/cartRoutes.js`
-- `src/App.jsx` (loads and syncs the cart)
+server/controllers/cartController.js
+server/routes/cartRoutes.js
+src/App.jsx (loads and syncs the cart)
 
 ## Checkout and Orders
-
 Checkout collects customer, shipping, billing, and payment details.
 The server recalculates prices and totals. Client prices are not trusted.
 Only card type and the last four digits are stored.
 
-- Customer, shipping, and billing validation.
-- Card type and last four digits only.
-- Server-side subtotal, tax (8%), shipping ($5, free at $75), and total.
-- Orders saved to the MongoDB `orders` collection.
-- Order confirmation, history, and detail views.
-- Users can only see their own orders.
+Customer, shipping, and billing validation.
+Card type and last four digits only.
+Server-side subtotal, tax (8%), shipping ($5, free at $75), and total.
+Orders saved to the MongoDB orders collection.
+Order confirmation, history, and detail views.
+Users can only see their own orders.
 
 ### Order API
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| POST | `/api/orders` | Place an order from the session cart |
-| GET | `/api/orders` | List the logged-in user's orders |
-| GET | `/api/orders/:id` | Get one order owned by the logged-in user |
+| Method | Endpoint          | Purpose                                   |
+| ------ | ----------------- | ----------------------------------------- |
+| POST   | `/api/orders`     | Place an order from the session cart      |
+| GET    | `/api/orders`     | List the logged-in user's orders          |
+| GET    | `/api/orders/:id` | Get one order owned by the logged-in user |
 
 Placing an order requires a login session and a non-empty session cart.
-
 ### Main Order Files
 
-- `server/controllers/orderController.js`
-- `server/routes/orderRoutes.js`
-- `src/views/CheckoutView.jsx`
-- `src/views/OrderConfirmationView.jsx`
-- `src/views/OrderHistoryView.jsx`
-- `src/views/OrderDetailView.jsx`
-- `src/utils/orderTotals.js`
+server/controllers/orderController.js
+server/routes/orderRoutes.js
+src/views/CheckoutView.jsx
+src/views/OrderConfirmationView.jsx
+src/views/OrderHistoryView.jsx
+src/views/OrderDetailView.jsx
+src/utils/orderTotals.js
 
 ### Seed products
-
 Products must exist in MongoDB so the server can look up prices.
 
-```bash
 cd server
 node seedProducts.js
 
@@ -210,11 +190,8 @@ TrainerMart checkout validates customer, shipping, and billing information in th
 
 ## API
 
-| Method | Endpoint | Auth |
-|---|---|---|
-| POST | `/api/orders` | Logged-in user |
-| GET | `/api/orders` | Logged-in user |
-| GET | `/api/orders/:id` | Logged-in user, own order only |
+MethodEndpointAuthPOST/api/ordersLogged-in userGET/api/ordersLogged-in userGET/api/orders/:idLogged-in user, own order only
+
 
 ## Main files
 
