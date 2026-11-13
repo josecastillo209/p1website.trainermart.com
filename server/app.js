@@ -8,6 +8,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import productRoutes from './routes/productRoutes.js';
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -85,7 +86,9 @@ await db.collection('users').createIndex(
   app.use('/api', cartRoutes);
 
   app.use('/api', orderRoutes); 
-   
+  
+  app.use('/api', productRoutes);
+
   app.use('/api', (req, res) => {
     res.status(404).json({ message: 'API endpoint not found.' });
   });
