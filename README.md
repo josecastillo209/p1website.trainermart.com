@@ -116,23 +116,122 @@ The following were verified locally:
 - Logout and rejection of account access afterward.
 - Successful production frontend build using `npm run build`.
 
-### Integration Remaining
+## Shopping Cart
 
-- Move the React application into the required top-level `client/`
-  directory and update setup instructions accordingly.
-- Connect the account dashboard to the order-history route.
-- Verify account functionality on the deployed Cloud Run application.
-- Add the account creation demo to the project Wiki.
+The cart is stored in the Express session and synced with React.
 
-Currently, two official plugins are available:
+- Add, update, and remove items.
+- Cart survives a page refresh.
+- Navbar count comes from the session cart.
+- Cart is cleared after a successful order.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Cart API
 
-## React Compiler
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/cart` | Return the session cart |
+| POST | `/api/cart` | Add an item |
+| PUT | `/api/cart/:itemId` | Update quantity |
+| DELETE | `/api/cart/:itemId` | Remove an item |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Main Cart Files
 
-## Expanding the Oxlint configuration
+- `server/controllers/cartController.js`
+- `server/routes/cartRoutes.js`
+- `src/App.jsx` (loads and syncs the cart)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Checkout and Orders
+
+Checkout collects customer, shipping, billing, and payment details.
+The server recalculates prices and totals. Client prices are not trusted.
+Only card type and the last four digits are stored.
+
+- Customer, shipping, and billing validation.
+- Card type and last four digits only.
+- Server-side subtotal, tax (8%), shipping ($5, free at $75), and total.
+- Orders saved to the MongoDB `orders` collection.
+- Order confirmation, history, and detail views.
+- Users can only see their own orders.
+
+### Order API
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/orders` | Place an order from the session cart |
+| GET | `/api/orders` | List the logged-in user's orders |
+| GET | `/api/orders/:id` | Get one order owned by the logged-in user |
+
+Placing an order requires a login session and a non-empty session cart.
+
+### Main Order Files
+
+- `server/controllers/orderController.js`
+- `server/routes/orderRoutes.js`
+- `src/views/CheckoutView.jsx`
+- `src/views/OrderConfirmationView.jsx`
+- `src/views/OrderHistoryView.jsx`
+- `src/views/OrderDetailView.jsx`
+- `src/utils/orderTotals.js`
+
+### Seed products
+
+Products must exist in MongoDB so the server can look up prices.
+
+```bash
+cd server
+node seedProducts.js
+
+
+## Wiki — Checkout and Orders page
+
+Create a wiki page named **Checkout and Orders**:
+
+```markdown
+# Checkout and Orders
+
+Live site: (add Cloud Run URL after deploy)
+
+## What this covers
+
+TrainerMart checkout validates customer, shipping, and billing information in the browser, then places the order through the Express API. Prices and totals are calculated on the server. Only the card type and last four digits are stored.
+
+## Flow
+
+1. User adds items. The cart is stored in the Express session.
+2. User opens Checkout and enters customer, shipping, billing, and payment details.
+3. Client-side validation blocks incomplete forms.
+4. `POST /api/orders` requires a logged-in user.
+5. The server looks up each product in MongoDB and ignores client prices.
+6. The server calculates subtotal, 8% tax, shipping, and total.
+7. The order is saved with card type and last four digits only.
+8. The session cart is cleared.
+9. The confirmation page shows the saved order.
+10. Order history and detail load only that user's orders.
+
+## API
+
+| Method | Endpoint | Auth |
+|---|---|---|
+| POST | `/api/orders` | Logged-in user |
+| GET | `/api/orders` | Logged-in user |
+| GET | `/api/orders/:id` | Logged-in user, own order only |
+
+## Main files
+
+- `server/controllers/orderController.js`
+- `server/routes/orderRoutes.js`
+- `src/views/CheckoutView.jsx`
+- `src/views/OrderConfirmationView.jsx`
+- `src/views/OrderHistoryView.jsx`
+- `src/views/OrderDetailView.jsx`
+
+## Demo
+
+(Add screenshots or a short video after Cloud Run is live.)
+
+1. Log in.
+2. Add a product with size and color.
+3. Open Cart, then Checkout.
+4. Submit valid customer, shipping, and payment details.
+5. Show the confirmation page.
+6. Open Orders and the order detail page.
