@@ -1,15 +1,45 @@
 import { useParams, Link } from 'react-router-dom'
-import { useState } from 'react'
-import products from '../data/products.json'
+import { useEffect, useState } from 'react'
 
 function ProductDetailView({ addToCart }) {
   const { id } = useParams()
-  const product = products.find((item) => item.id === Number(id))
-
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [size, setSize] = useState('')
   const [color, setColor] = useState('')
   const [quantity, setQuantity] = useState(1)
   const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        const response = await fetch(`/api/products/${id}`)
+        const data = await response.json()
+
+        if (!response.ok) {
+          setProduct(null)
+          setLoading(false)
+          return
+        }
+
+        setProduct(data)
+        setLoading(false)
+      } catch (error) {
+        setProduct(null)
+        setLoading(false)
+      }
+    }
+
+    loadProduct()
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="container py-5">
+        <p className="text-muted">Loading product…</p>
+      </div>
+    )
+  }
 
   if (!product) {
     return (
@@ -21,14 +51,14 @@ function ProductDetailView({ addToCart }) {
   }
 
   const displayPrice =
-  product.sizePrices && size && product.sizePrices[size]
-    ? product.sizePrices[size]
-    : product.price
-  
+    product.sizePrices && size && product.sizePrices[size]
+      ? product.sizePrices[size]
+      : product.price
+
   const displayImage =
-  product.colorImages && color && product.colorImages[color]
-    ? product.colorImages[color]
-    : product.image
+    product.colorImages && color && product.colorImages[color]
+      ? product.colorImages[color]
+      : product.image
 
   function handleQuantityChange(event) {
     const value = Number(event.target.value)
