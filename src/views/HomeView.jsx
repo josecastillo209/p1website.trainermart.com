@@ -1,9 +1,27 @@
 import { Link } from 'react-router-dom'
-import products from '../data/products.json'
 import ProductList from '../components/ProductList'
+import { useEffect, useState} from 'react'
 
 function HomeView() {
-  const featured = products.slice(0, 3)
+    const [featured, setFeatured] = useState([])
+
+    useEffect(() => {
+        async function loadProducts() {
+            try {
+                const response = await fetch('/api/products')
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch products')
+                }
+
+                const products = await response.json()
+                setFeatured(products.slice(0, 3))
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        loadProducts()
+    }, [])
 
   return (
     <div>
