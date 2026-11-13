@@ -6,6 +6,8 @@ import { MongoClient } from 'mongodb';
 import accountRoutes from './routes/accountRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -81,7 +83,7 @@ await db.collection('users').createIndex(
   app.use('/api', accountRoutes);
 
   app.use('/api', cartRoutes);
-  
+
   app.use('/api', orderRoutes); 
    
   app.use('/api', (req, res) => {
@@ -91,6 +93,15 @@ await db.collection('users').createIndex(
   app.use((error, req, res, next) => {
     console.error('Request failed:', error.name);
     res.status(500).json({ message: 'Something went wrong on the server.' });
+  });
+
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const clientDist = path.join(__dirname, 'public');
+
+  app.use(express.static(clientDist));
+
+  app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
   });
 
   const server = app.listen(port, '0.0.0.0', () => {
