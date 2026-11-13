@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Cart from '../components/Cart'
 
 function CartView({ cartItems, updateQuantity, removeFromCart }) {
@@ -9,6 +10,13 @@ function CartView({ cartItems, updateQuantity, removeFromCart }) {
         updateQuantity={updateQuantity}
         removeFromCart={removeFromCart}
       />
+      {cartItems.length > 0 && (
+        <div className="mt-4">
+          <Link to="/checkout" className="btn btn-dark">
+            Proceed to checkout
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

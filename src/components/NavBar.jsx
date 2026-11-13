@@ -36,6 +36,9 @@ function Navbar({ cartCount }) {
             <li className="nav-item">
               <NavLink className="nav-link" to="/create-account">Sign up</NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/orders">Orders</NavLink>
+            </li>
           </ul>
         </div>
       </div>

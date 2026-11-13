@@ -8,6 +8,10 @@ import CartView from './views/CartView'
 import AccountView from './views/AccountView'
 import CreateAccountView from './views/CreateAccountView'
 import Footer from './components/Footer'
+import CheckoutView from './views/CheckoutView'
+import OrderConfirmationView from './views/OrderConfirmationView'
+import OrderHistoryView from './views/OrderHistoryView'
+import OrderDetailView from './views/OrderDetailView'
 
 function App() {
   const [cartItems, setCartItems] = useState([])
@@ -62,6 +66,10 @@ function App() {
     )
   }
 
+  function clearCart() {
+    setCartItems([])
+  }
+
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
@@ -91,6 +99,19 @@ function App() {
         <Route
           path="/create-account"
           element={<CreateAccountView createAccount={createAccount} />}
+        />
+        <Route
+          path="/checkout"
+          element={<CheckoutView cartItems={cartItems} clearCart={clearCart} />}
+        />
+        <Route 
+          path="/order-confirmation" element={<OrderConfirmationView />} 
+        />
+        <Route 
+          path="/orders" element={<OrderHistoryView />} 
+        />
+        <Route 
+          path="/orders/:id" element={<OrderDetailView />} 
         />
       </Routes>
       <Footer />
