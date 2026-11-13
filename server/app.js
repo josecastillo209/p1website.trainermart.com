@@ -4,6 +4,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { MongoClient } from 'mongodb';
 import accountRoutes from './routes/accountRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -78,6 +79,8 @@ await db.collection('users').createIndex(
   
   app.use('/api', accountRoutes);
 
+  app.use('/api', orderRoutes); 
+   
   app.use('/api', (req, res) => {
     res.status(404).json({ message: 'API endpoint not found.' });
   });

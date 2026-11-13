@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { calculateOrderTotals } from '../utils/orderTotals'
 
 const emptyAddress = {
   street: '',
@@ -100,7 +99,7 @@ function CheckoutView({ cartItems = [], clearCart }) {
     return nextErrors
   }
 
-  function handleSubmit(event) {
+    async function handleSubmit(event) {
     event.preventDefault()
     const nextErrors = validate()
     setErrors(nextErrors)
@@ -113,11 +112,9 @@ function CheckoutView({ cartItems = [], clearCart }) {
     const billing = form.sameAsShipping ? form.shipping : form.billing
 
     const payload = {
-      customer: {
-        firstName: form.firstName.trim(),
-        lastName: form.lastName.trim(),
-        email: form.email.trim(),
-      },
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim(),
       shipping: {
         street: form.shipping.street.trim(),
         city: form.shipping.city.trim(),
@@ -130,30 +127,60 @@ function CheckoutView({ cartItems = [], clearCart }) {
         state: billing.state.trim(),
         zip: billing.zip.trim(),
       },
-      payment: {
-        cardType: form.cardType,
-        last4: form.last4.trim(),
-      },
+      sameAsShipping: form.sameAsShipping,
+      cardType: form.cardType,
+      last4: form.last4.trim(),
     }
 
-    // Temporary until POST /api/orders exists
-    const totals = calculateOrderTotals(cartItems)
-    const order = {
-      orderId: `TMP-${Date.now()}`,
-      orderDate: new Date().toLocaleString(),
-      customer: payload.customer,
-      shipping: payload.shipping,
-      billing: payload.billing,
-      payment: payload.payment,
-      items: cartItems.map((item) => ({ ...item })),
-      totals,
-    }
+    setMessage('Placing order…')
 
-    if (typeof clearCart === 'function') {
-      clearCart()
-    }
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      })
 
-    navigate('/order-confirmation', { state: { order } })
+      const data = await response.json()
+
+      if (!response.ok) {
+        setMessage(data.message || 'Could not place the order.')
+        if (data.errors) {
+          setErrors((current) => ({ ...current, ...data.errors }))
+        }
+        return
+      }
+
+      if (typeof clearCart === 'function') {
+        clearCart()
+      }
+
+      const order = data.order
+      navigate('/order-confirmation', {
+        state: {
+          order: {
+            orderId: order.orderId || order._id,
+            orderDate: new Date(order.createdAt).toLocaleString(),
+            customer: order.customer,
+            shipping: order.shipping,
+            billing: order.billing,
+            payment: order.payment,
+            items: order.items.map((item) => ({
+              id: item.productId,
+              name: item.name,
+              size: item.size,
+              color: item.color,
+              quantity: item.quantity,
+              price: item.unitPrice,
+            })),
+            totals: order.totals,
+          },
+        },
+      })
+    } catch (error) {
+      setMessage('Network error. Is the server running?')
+    }
   }
 
   function fieldClass(key) {
@@ -179,7 +206,11 @@ function CheckoutView({ cartItems = [], clearCart }) {
             Enter customer, shipping, and billing details. Card numbers are not stored—only type and last four digits.
           </p>
 
-          {message && <div className="alert alert-success">{message}</div>}
+          {message && (
+          <div className={`alert ${message.startsWith('Placing') ? 'alert-info' : 'alert-danger'}`}>
+            {message}
+          </div>
+          )}
           {errors.cart && <div className="alert alert-danger">{errors.cart}</div>}
 
           <form onSubmit={handleSubmit} noValidate>
