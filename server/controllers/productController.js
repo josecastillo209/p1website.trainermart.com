@@ -1,4 +1,5 @@
 // Product data comes from MongoDB.
+
 export async function getProducts(req, res, next) {
     try {
         const products = await req.app.locals.db.collection('products')

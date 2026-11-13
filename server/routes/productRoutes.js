@@ -1,3 +1,4 @@
+
 import { Router } from 'express';
 import { getProducts, getProduct } from '../controllers/productController.js';
 
