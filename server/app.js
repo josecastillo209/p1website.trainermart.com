@@ -5,6 +5,7 @@ import MongoStore from 'connect-mongo';
 import { MongoClient } from 'mongodb';
 import accountRoutes from './routes/accountRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import cartRoutes from './routes/cartRoutes.js';
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -79,6 +80,8 @@ await db.collection('users').createIndex(
   
   app.use('/api', accountRoutes);
 
+  app.use('/api', cartRoutes);
+  
   app.use('/api', orderRoutes); 
    
   app.use('/api', (req, res) => {

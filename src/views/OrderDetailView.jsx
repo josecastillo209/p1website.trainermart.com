@@ -1,22 +1,52 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { sampleOrders } from '../data/sampleOrders'
 
 function OrderDetailView() {
   const { id } = useParams()
-  const order = sampleOrders.find((item) => item.orderId === id)
+  const [order, setOrder] = useState(null)
+  const [message, setMessage] = useState('Loading order…')
+
+  useEffect(() => {
+    async function loadOrder() {
+      try {
+        const response = await fetch(`/api/orders/${id}`, {
+          credentials: 'include',
+        })
+        const data = await response.json()
+
+        if (response.status === 401) {
+          setMessage('Please log in to view this order.')
+          return
+        }
+
+        if (!response.ok) {
+          setMessage(data.message || 'Order not found.')
+          return
+        }
+
+        setOrder(data.order)
+        setMessage('')
+      } catch (error) {
+        setMessage('Network error. Is the server running?')
+      }
+    }
+
+    loadOrder()
+  }, [id])
 
   if (!order) {
     return (
       <div className="container py-5">
-        <h1 className="mb-3">Order not found</h1>
+        <h1 className="mb-3">Order</h1>
+        <p className="text-muted">{message}</p>
         <Link to="/orders" className="btn btn-dark">Back to orders</Link>
       </div>
     )
   }
 
   const {
-    orderId,
-    orderDate,
+    _id,
+    createdAt,
     customer,
     shipping,
     billing,
@@ -25,10 +55,12 @@ function OrderDetailView() {
     totals,
   } = order
 
+  const orderDate = createdAt ? new Date(createdAt).toLocaleString() : ''
+
   return (
     <div className="container py-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h1 className="mb-0">Order {orderId}</h1>
+        <h1 className="mb-0">Order {_id}</h1>
         <Link to="/orders" className="btn btn-outline-secondary btn-sm">
           All orders
         </Link>
@@ -39,27 +71,27 @@ function OrderDetailView() {
         <div className="col-md-4">
           <h2 className="h6">Customer</h2>
           <p className="mb-0">
-            {customer.firstName} {customer.lastName}
+            {customer?.firstName} {customer?.lastName}
             <br />
-            {customer.email}
+            {customer?.email}
           </p>
         </div>
         <div className="col-md-4">
           <h2 className="h6">Ship to</h2>
           <p className="mb-0">
-            {shipping.street}
+            {shipping?.street}
             <br />
-            {shipping.city}, {shipping.state} {shipping.zip}
+            {shipping?.city}, {shipping?.state} {shipping?.zip}
           </p>
         </div>
         <div className="col-md-4">
           <h2 className="h6">Billing / payment</h2>
           <p className="mb-0">
-            {billing.street}
+            {billing?.street}
             <br />
-            {billing.city}, {billing.state} {billing.zip}
+            {billing?.city}, {billing?.state} {billing?.zip}
             <br />
-            {payment.cardType} ending in {payment.last4}
+            {payment?.cardType} ending in {payment?.last4}
           </p>
         </div>
       </div>
@@ -77,16 +109,17 @@ function OrderDetailView() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => {
-              const line = item.price * item.quantity
+            {(items || []).map((item, index) => {
+              const unit = Number(item.unitPrice ?? item.price ?? 0)
+              const line = Number(item.lineTotal ?? unit * item.quantity)
               return (
-                <tr key={`${item.id}-${item.size}-${item.color}`}>
+                <tr key={`${item.productId}-${item.size}-${item.color}-${index}`}>
                   <td>{item.name}</td>
                   <td>
                     Size {item.size} · {item.color}
                   </td>
                   <td className="text-end">{item.quantity}</td>
-                  <td className="text-end">${item.price.toFixed(2)}</td>
+                  <td className="text-end">${unit.toFixed(2)}</td>
                   <td className="text-end">${line.toFixed(2)}</td>
                 </tr>
               )
@@ -98,21 +131,23 @@ function OrderDetailView() {
       <div className="ms-auto" style={{ maxWidth: '280px' }}>
         <div className="d-flex justify-content-between mb-1">
           <span>Subtotal</span>
-          <span>${totals.subtotal.toFixed(2)}</span>
+          <span>${Number(totals?.subtotal || 0).toFixed(2)}</span>
         </div>
         <div className="d-flex justify-content-between mb-1">
-          <span>Tax ({Math.round(totals.taxRate * 100)}%)</span>
-          <span>${totals.tax.toFixed(2)}</span>
+          <span>Tax ({Math.round((totals?.taxRate || 0) * 100)}%)</span>
+          <span>${Number(totals?.tax || 0).toFixed(2)}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span>Shipping</span>
           <span>
-            {totals.shipping === 0 ? 'Free' : `$${totals.shipping.toFixed(2)}`}
+            {Number(totals?.shipping) === 0
+              ? 'Free'
+              : `$${Number(totals?.shipping || 0).toFixed(2)}`}
           </span>
         </div>
         <div className="d-flex justify-content-between border-top pt-2 fw-bold">
           <span>Total</span>
-          <span>${totals.total.toFixed(2)}</span>
+          <span>${Number(totals?.total || 0).toFixed(2)}</span>
         </div>
       </div>
     </div>
