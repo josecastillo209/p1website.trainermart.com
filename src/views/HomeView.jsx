@@ -1,9 +1,25 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import products from '../data/products.json'
 import ProductList from '../components/ProductList'
 
 function HomeView() {
-  const featured = products.slice(0, 3)
+  const [featured, setFeatured] = useState([])
+
+  useEffect(() => {
+    async function loadFeatured() {
+      try {
+        const response = await fetch('/api/products')
+        const data = await response.json()
+        if (response.ok && Array.isArray(data)) {
+          setFeatured(data.slice(0, 3))
+        }
+      } catch (error) {
+        setFeatured([])
+      }
+    }
+
+    loadFeatured()
+  }, [])
 
   return (
     <div>
